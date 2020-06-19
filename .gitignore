@@ -4,3 +4,10 @@
 .vscode
 *.png
 submit.sh
+slurm.out
+
+# Output directories
+*/_logs/*
+*/_molden/*
+*/_energies/*
+*/_chk/*
