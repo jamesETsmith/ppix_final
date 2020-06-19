@@ -1,0 +1,65 @@
+# Usage:
+#
+# java -jar /path/to/Jmol.jar molden_file.molden -s dump_mos.spt -g 1024x840
+
+function _setWindowState() {
+  background [xffffff];
+}
+
+
+function _setModelState() {
+  mo cutoff 0.05;
+  mo fill noMesh noDots frontOnly frontlit;
+
+  frank on;
+  font frank 16.0 SansSerif Plain;
+  select *;
+  set fontScaling false;
+
+}
+
+function _setPerspectiveState() {
+  set perspectiveModel 11;
+  set scaleAngstromsPerInch 0.0;
+  set perspectiveDepth true;
+  set visualRange 5.0;
+  set cameraDepth 3.0;
+  boundbox corners {-7.660618 -5.9601974 -1.401804} {7.1619587 5.9775143 1.470254} # volume = 508.2039;
+  center {-0.24932933 0.008658171 0.034224987};
+   moveto -1.0 {0 0 1 0} 100.0 0.0 0.0 {-0.24932933 0.008658171 0.034224987} 9.610211 {0 0 0} 0 0 0 3.0 0.0 0.0;
+  save orientation "default";
+  moveto 0.0 {0 0 1 0} 86.96 0.0 0.0 {-0.24932933 0.008658171 0.034224987} 9.610211 {0 0 0} 0 0 0 3.0 0.0 0.0;;
+  slab 100;depth 0;
+  set slabRange 0.0;
+  set spinX 0; set spinY 30; set spinZ 0; set spinFps 30;  set navX 0; set navY 0; set navZ 0; set navFps 10;
+}
+
+function _setSelectionState() {
+  select ({0:36});
+  set hideNotSelected false;
+}
+
+function _setState() {
+  initialize;
+  set refreshing false;
+  _setWindowState;
+  #_setFileState;
+  #_setParameterState;
+  _setModelState;
+  _setPerspectiveState;
+  _setSelectionState;
+  set refreshing true;
+  set antialiasDisplay false;
+  set antialiasTranslucent true;
+  set antialiasImages true;
+}
+
+# Sets the state (angle/zoom) for consistency
+_setState
+
+# Access and print MOs
+mo TITLEFORMAT "%S"
+a = [148, 149, 150, 151]
+
+for(var i IN a)
+	{print i; mo @i; var name = "Anion_NO_" + @i + ".PNG"; write image png @name;}

@@ -1,8 +1,9 @@
-*.molden
-*.chk
 *__pycache__*
 .vscode
 *.png
+*.PNG
+*.pdf
+*.tiff
 submit.sh
 slurm.out
 
