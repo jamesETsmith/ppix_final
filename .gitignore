@@ -1,0 +1,6 @@
+*.molden
+*.chk
+*__pycache__*
+.vscode
+*.png
+submit.sh
