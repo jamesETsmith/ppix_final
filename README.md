@@ -6,7 +6,9 @@ This repository contains the input files to reproduce the NEVPT2 calculations fr
 
 Wyatt Zagorec-Marks, James E. T. Smith, Madison M. Foreman, Sandeep Sharma, J. Mathias Weber. ___Intrinsic Electronic Spectra of Cryogenically Prepared Protoporphyrin IX Ions in Vacuo – Deprotonation-Induced Stark Shifts___. __(Submitted)__.
 
-> If this work helped you in your research please cite us using one of the following:
+
+
+If this work helped you in your research please cite us using one of the following:
 
 ```
 Citation coming soon!
