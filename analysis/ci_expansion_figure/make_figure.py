@@ -17,20 +17,20 @@ def parse_sa_output(filename: str, spin=0, nelecas=4, trev=False) -> dict:
         # Search file
         next_line = next(output_gen)
 
-        # # Get CAS space
-        # if "CAS" in next_line and "ncore =" in next_line:
-        #     lsplit = next_line.split()
-        #     ncore = int(lsplit[5].replace(",", ""))  # in 1-based indexing
-        #     cas_mo = list(range(ncore, ncore + 4))  # in 0-based indexing
-        #     print("CAS MO indices (0-based indexing) =", cas_mo)
-        #     ci_info["cas_mo"] = cas_mo
-        #     ci_info["cas_mo_energies"] = []
+        # Get CAS space
+        if "CAS" in next_line and "ncore =" in next_line:
+            lsplit = next_line.split()
+            ncore = int(lsplit[5].replace(",", ""))  # in 1-based indexing
+            cas_mo = list(range(ncore, ncore + 4))  # in 0-based indexing
+            print("CAS MO indices (0-based indexing) =", cas_mo)
+            ci_info["cas_mo"] = cas_mo
+            ci_info["cas_mo_energies"] = []
 
-        # # Get CAS MO Energies
-        # if "<i|F|i>" in next_line:
-        #     if int(next_line.split()[2]) - 1 in ci_info["cas_mo"]:
-        #         ci_info["cas_mo_energies"].append(float(next_line.split()[-1]))
-        #         # print(ci_info["cas_mo_energies"])
+        # Get CAS MO Energies
+        if "<i|F|i>" in next_line:
+            if int(next_line.split()[2]) - 1 in ci_info["cas_mo"]:
+                ci_info["cas_mo_energies"].append(float(next_line.split()[-1]))
+                # print(ci_info["cas_mo_energies"])
 
         # Collect data
         if start_tok in next_line:
@@ -156,6 +156,7 @@ def make_ci_wfn_diagram(
     state: dict,
     filename: str,
     norbs: int,
+    cas_mo_energies: list,
     figsize: tuple = (8, 6),
     x_spacing: float = 3,
     y_label_pos: float = -2,
@@ -170,6 +171,8 @@ def make_ci_wfn_diagram(
         Filename to save figure to.
     norbs : int
         Size of active space or number of orbitals to consider.
+    cas_mo_energies: list
+        A list of the cas orbital energies.
     figsize : tuple, optional
         Change figuresize, adjust this when plotting more than 4-6 configurations, by default (8, 6).
     x_spacing : float, optional
@@ -184,7 +187,7 @@ def make_ci_wfn_diagram(
 
     Examples
     --------
-    >>> make_ci_wfn_diagram(mono_state_0, "monoanion_S_0", 4)
+    >>> make_ci_wfn_diagram(mono_state_0, "monoanion_S_0", 4, cas_mo_energies)
     """
     ci = state["ci"]
     a_occ = state["a_occ"]
@@ -215,9 +218,19 @@ def make_ci_wfn_diagram(
         y_label_pos, -1, "Weight", ha="center", va="center", fontsize=20, rotation=90
     )
 
+    # Add MO Energies
+    for i in range(norbs):
+        plt.text(
+            figsize[1] * 1.75,
+            i,
+            f"{cas_mo_energies[i]:.4f} Ha",
+            va="center",
+            fontsize=15,
+        )
+
     plt.ylim(-1, 4)
     plt.axis("off")
-    plt.tight_layout()
+    plt.tight_layout(pad=7)
 
     plt.savefig(
         "{}.png".format(filename),
@@ -231,6 +244,7 @@ def make_ci_wfn_diagram(
 
 def make_all_diagrams(mcscf_output, output_base, ncas, trev=False):
     ci_info = parse_sa_output(mcscf_output, trev=trev)
+    cas_mo_energies = ci_info["cas_mo_energies"]
     for k, v in ci_info.items():
         if k not in ["state 0", "state 1", "state 2"]:
             print(f"Skipping {k}")
@@ -242,7 +256,11 @@ def make_all_diagrams(mcscf_output, output_base, ncas, trev=False):
         print(figsize)
         # exit(0)
         make_ci_wfn_diagram(
-            v, output_base + "S_{}".format(k[-1]), ncas, figsize=figsize
+            v,
+            output_base + "S_{}".format(k[-1]),
+            ncas,
+            cas_mo_energies,
+            figsize=figsize,
         )
 
 

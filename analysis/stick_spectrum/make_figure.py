@@ -21,7 +21,7 @@ if __name__ == "__main__":
     # Get Data
     #
     df_ref = get_reference_data()
-    df_pyscf = pd.read_csv("../stable_sa-3-mcscf.csv")
+    df_pyscf = pd.read_csv("../sa-3-mcscf_nevpt2.csv")
     df_orca = pd.read_csv("../orca_data.csv")
 
     ev_2_cm_1 = physical_constants["electron volt-inverse meter relationship"][0] * 1e-2
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     plt.xlabel("Energy cm$^{-1}$")
 
     plt.tight_layout()
-    plt.savefig(filename)
+    plt.savefig(filename, dpi=900)
 
     #
     # Convert to TIFF
